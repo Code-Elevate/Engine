@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+case "${CODE_LANGUAGE}" in
+    c)
+        rename 's/$/\.c/' "$@" # Add .c extension
+        gcc -std=c11 *.c -lm
+        ;;
+    c++)
+        rename 's/$/\.cpp/' "$@" # Add .cpp extension
+        g++ -std=c++17 *.cpp
+        ;;
+    *)
+        echo "How did you get here? (${CODE_LANGUAGE})"
+        exit 1
+        ;;
+esac
+
+chmod +x a.out
