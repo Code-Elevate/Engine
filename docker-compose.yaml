@@ -1,0 +1,14 @@
+version: '3.2'
+
+services:
+    api:
+        image: gopalsaraf/code-elevate-engine
+        container_name: engine_api
+        restart: always
+        ports:
+            - 2000:2000
+        volumes:
+            - ./data/engine/packages:/engine/packages
+        tmpfs:
+            - /engine/jobs:exec,uid=1000,gid=1000,mode=711
+            - /tmp:exec
