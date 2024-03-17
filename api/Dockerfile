@@ -8,7 +8,7 @@ RUN for i in $(seq 1001 1500); do \
         groupadd -g $i runner$i && \
         useradd -M runner$i -g $i -u $i ; \
     done
-    
+
 RUN apt-get update && \
     apt-get install -y libxml2 gnupg tar coreutils util-linux libc6-dev \
     binutils build-essential locales libpcre3-dev libevent-dev libgmp3-dev \
@@ -21,6 +21,7 @@ RUN apt-get update && \
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && locale-gen
 
 WORKDIR /engine_api
+
 COPY ["package.json", "package-lock.json", "./"]
 RUN npm install
 COPY ./src ./src
