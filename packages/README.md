@@ -1,4 +1,4 @@
-# CodeElevate Engine Package Build Scripts
+# Engine Package Build Scripts
 
 ## Building a package
 

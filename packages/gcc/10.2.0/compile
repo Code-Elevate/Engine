@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Put instructions to compile source code, remove this file if the language does not require this stage
+
+
 case "${CODE_LANGUAGE}" in
     c)
         rename 's/$/\.c/' "$@" # Add .c extension
@@ -8,6 +11,14 @@ case "${CODE_LANGUAGE}" in
     c++)
         rename 's/$/\.cpp/' "$@" # Add .cpp extension
         g++ -std=c++17 *.cpp
+        ;;
+    d)
+        rename 's/.code$/\.d/' "$@" # Add .d extension
+        gdc *.d
+        ;;
+    fortran)
+        rename 's/.code$/\.f90/' "$@" # Add .f90 extension
+        gfortran *.f90
         ;;
     *)
         echo "How did you get here? (${CODE_LANGUAGE})"
