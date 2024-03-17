@@ -33,5 +33,5 @@ jobs:
                   push: true
                   pull: true
                   tags: |
-                        docker.pkg.github.com/${{ github.repository }}/api:latest
-                        ghcr.io/${{ github.repository }}/api:latest
+                        docker.pkg.github.com/code-elevate/engine/api
+                        ghcr.io/code-elevate/engine/api
