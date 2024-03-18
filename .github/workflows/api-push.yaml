@@ -37,5 +37,5 @@ jobs:
                   push: true
                   pull: true
                   tags: |
-                        docker.pkg.github.com/code-elevate/engine
+                        docker.pkg.github.com/code-elevate/engine/api
                         ghcr.io/code-elevate/engine
