@@ -2,7 +2,7 @@ version: '3.2'
 
 services:
     api:
-        image: gopalsaraf/code-elevate-engine
+        image: ghcr.io/code-elevate/engine
         container_name: engine_api
         restart: always
         ports:
