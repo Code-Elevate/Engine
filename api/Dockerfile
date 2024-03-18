@@ -25,7 +25,6 @@ WORKDIR /engine_api
 COPY ["package.json", "package-lock.json", "./"]
 RUN npm install
 COPY ./src ./src
-
 RUN make -C ./src/nosocket/ all && make -C ./src/nosocket/ install
 
 CMD ["node", "src"]
