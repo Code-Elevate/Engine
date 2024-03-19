@@ -118,6 +118,12 @@ The following runtimes are currently supported:
 
 This Engine is designed to be deployed as a Docker container. It is recommended to use the provided `docker-compose.yml` file to deploy the engine.
 
+# Deployment
+
+This Engine is designed to be deployed as a Docker container. It is recommended to use the provided `docker-compose.yml` file to deploy the engine.
+
+For instructions on how to install and run the Engine on AWS EC2, please visit the [Wiki - How to install and run the Engine on AWS EC2](https://github.com/Code-Elevate/Engine/wiki/How-to-install-and-run-the-Engine-on-AWS-EC2).
+
 ### Host System Package Dependencies
 
 - Docker
