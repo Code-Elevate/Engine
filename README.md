@@ -6,43 +6,31 @@ A high performance code execution engine for running code in a secure and isolat
 
 ### Runtimes Endpoint
 
-`GET /api/runtimes`
+`GET /engine/runtimes`
 
 This endpoint will return the supported languages along with the current version and aliases. To execute
-code for a particular language using the `/api/execute` endpoint, either the name or one of the aliases must
+code for a particular language using the `/engine/execute` endpoint, either the name or one of the aliases must
 be provided, along with the version.
 Multiple versions of the same language may be present at the same time, and may be selected when running a job.
 
 ```json
-HTTP/1.1 200 OK
-Content-Type: application/json
-
 [
-    {
-        "language": "c++",
-        "version": "10.2.0",
-        "aliases": [
-            "cpp",
-            "g++"
-        ]
-    },
-    {
-        "language": "python",
-        "version": "3.12.0",
-        "aliases": [
-            "py",
-            "py3",
-            "python3",
-            "python3.12"
-        ]
-    },
-    ...
+  {
+    "language": "c++",
+    "version": "10.2.0",
+    "aliases": ["cpp", "g++"]
+  },
+  {
+    "language": "python",
+    "version": "3.12.0",
+    "aliases": ["py", "py3", "python3", "python3.12"]
+  }
 ]
 ```
 
 ### Execute Endpoint
 
-`POST /api/execute`
+`POST /engine/execute`
 
 This endpoint requests execution of some arbitrary code.
 
@@ -85,30 +73,24 @@ Each of these keys has an identical structure, containing both a `stdout` and `s
 It also contains the `code` and `signal` which was returned from each process.
 
 ```json
-HTTP/1.1 200 OK
-Content-Type: application/json
-
 {
-    "language": "python",
-    "version": "3.12.0",
-    "run": {
-        "stdout": "Hello, World!\n",
-        "stderr": "",
-        "output": "Hello, World!\n",
-        "code": 0,
-        "signal": null
-    }
+  "language": "python",
+  "version": "3.12.0",
+  "run": {
+    "stdout": "Hello, World!\n",
+    "stderr": "",
+    "output": "Hello, World!\n",
+    "code": 0,
+    "signal": null
+  }
 }
 ```
 
 If a problem exists with the request, a `400` status code is returned and the reason in the `message` key.
 
 ```json
-HTTP/1.1 400 Bad Request
-Content-Type: application/json
-
 {
-    "message": "html-5.0.0 runtime is unknown"
+  "message": "html-5.0.0 runtime is unknown"
 }
 ```
 
@@ -154,13 +136,13 @@ git clone https://github.com/Code-Elevate/Engine
 cd Engine
 ```
 
-### Start the API container
+### Start the engine
 
 ```sh
-docker-compose up -d api
+docker-compose up -d engine
 ```
 
-The API will now be online with no language runtimes installed. To install runtimes, [use the CLI](#cli).
+The API will now be online on port `2000` with no language runtimes installed. To install runtimes, [use the CLI](#cli).
 
 ### CLI
 

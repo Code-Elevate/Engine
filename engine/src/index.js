@@ -81,8 +81,8 @@ expressWs(app);
 
   logger.debug("Registering Routes");
 
-  const api = require("./apis");
-  app.use("/api", api);
+  const engine = require("./engine");
+  app.use("/engine", engine);
 
   app.get("/", (req, res, next) => {
     return res

@@ -1,10 +1,10 @@
-name: Publish API image
+name: Publish Engine API Image
 on:
     push:
         branches:
             - main
         paths:
-            - api/**
+            - engine/**
 
 permissions:
     contents: read
@@ -30,10 +30,10 @@ jobs:
                   password: ${{ secrets.GITHUB_TOKEN }}
                   registry: ghcr.io
 
-            - name: Build and push API
+            - name: Build and Push Docker image
               uses: docker/build-push-action@v4
               with:
-                  context: api
+                  context: engine
                   push: true
                   pull: true
                   tags: |

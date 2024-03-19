@@ -89,7 +89,7 @@ exports.builder = {
 
 async function handle_interactive(files, argv) {
   const ws = new WebSocket(
-    argv.engineUrl.replace("http", "ws") + "/api/connect"
+    argv.engineUrl.replace("http", "ws") + "/engine/connect"
   );
 
   const log_message =
@@ -206,7 +206,7 @@ async function run_non_interactively(files, argv) {
     run_timeout: argv.rt,
   };
 
-  let { data: response } = await argv.axios.post("/api/execute", request);
+  let { data: response } = await argv.axios.post("/engine/execute", request);
 
   const step = (name, ctx) => {
     console.log(chalk.bold(`== ${name} ==`));

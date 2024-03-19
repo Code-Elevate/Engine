@@ -1,9 +1,9 @@
-version: '3.2'
+version: '3.8'
 
 services:
-    api:
+    engine:
         image: ghcr.io/code-elevate/engine
-        container_name: engine_api
+        container_name: engine
         restart: always
         ports:
             - 2000:2000
