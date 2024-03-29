@@ -29,7 +29,7 @@ exports.handler = async ({ axios, packages }) => {
   const requests = packages.map((package) => split_package(package));
   for (request of requests) {
     try {
-      const uninstall = await axios.delete(`/engine/packages`, {
+      const uninstall = await axios.delete(`/packages`, {
         data: request,
       });
 

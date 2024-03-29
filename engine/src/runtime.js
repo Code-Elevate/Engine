@@ -213,9 +213,14 @@ module.exports.get_runtime_by_name_and_version = function (runtime, ver) {
 };
 
 module.exports.get_latest_version_of_language = function (lang) {
-  return runtimes
-    .filter((rt) => rt.language == lang)
-    .sort((a, b) => semver.rcompare(a.version, b.version))[0];
+  const matchingRuntimes = runtimes.filter((rt) => rt.language === lang);
+  if (matchingRuntimes.length === 0) {
+    return null;
+  }
+  const latestVersion = matchingRuntimes.reduce((prev, curr) => {
+    return semver.gt(curr.version, prev.version) ? curr : prev;
+  });
+  return latestVersion;
 };
 
 module.exports.load_package = Runtime.load_package;

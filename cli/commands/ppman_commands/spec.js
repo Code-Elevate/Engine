@@ -50,7 +50,7 @@ exports.handler = async ({ axios, specfile }) => {
     if (rule._raw.length != 0) rules.push(rule);
   }
 
-  const packages_req = await axios.get("/engine/packages");
+  const packages_req = await axios.get("/packages");
   const packages = packages_req.data;
 
   const installed = packages.filter((pkg) => pkg.installed);
@@ -131,7 +131,7 @@ exports.handler = async ({ axios, specfile }) => {
   for (const op of operations) {
     if (op.type == "install") {
       try {
-        const install = await axios.post(`/engine/packages`, {
+        const install = await axios.post(`/packages`, {
           language: op.package,
           version: op.version,
         });
@@ -147,7 +147,7 @@ exports.handler = async ({ axios, specfile }) => {
       }
     } else if (op.type == "uninstall") {
       try {
-        const install = await axios.delete(`/engine/packages`, {
+        const install = await axios.delete(`/packages`, {
           data: {
             language: op.package,
             version: op.version,

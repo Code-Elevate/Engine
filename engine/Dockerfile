@@ -1,4 +1,4 @@
-FROM node:15.10.0-buster-slim
+FROM node:18-alpine
 
 ENV DEBIAN_FRONTEND=noninteractive
 

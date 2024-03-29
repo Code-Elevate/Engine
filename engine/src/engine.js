@@ -72,7 +72,7 @@ function get_job(body) {
     if (!version || typeof version !== "string") {
       // Find the latest version of the language
       const latest_version = runtime.get_latest_version_of_language(language);
-      if (latest_version === undefined) {
+      if (!latest_version) {
         return reject({
           message: `${language} is unknown`,
         });

@@ -15,7 +15,7 @@ const msg_format = {
 };
 
 exports.handler = async ({ axios }) => {
-  const packages = await axios.get("/engine/packages");
+  const packages = await axios.get("/packages");
 
   const pkg_msg = packages.data.map(msg_format.color).join("\n");
 

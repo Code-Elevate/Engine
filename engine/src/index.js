@@ -81,14 +81,14 @@ expressWs(app);
 
   logger.debug("Registering Routes");
 
-  const engine = require("./engine");
-  app.use("/engine", engine);
-
   app.get("/", (req, res, next) => {
     return res
       .status(200)
-      .send({ message: "Welcone to CodeExecute Engine API" });
+      .send({ message: "Welcome to CodeExecute Engine API" });
   });
+
+  const engine = require("./engine");
+  app.use("/", engine);
 
   app.use((req, res, next) => {
     return res.status(404).send({ message: "Not Found" });

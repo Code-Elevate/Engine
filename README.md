@@ -6,10 +6,10 @@ A high performance code execution engine for running code in a secure and isolat
 
 ### Runtimes Endpoint
 
-`GET /engine/runtimes`
+`GET /runtimes`
 
 This endpoint will return the supported languages along with the current version and aliases. To execute
-code for a particular language using the `/engine/execute` endpoint, either the name or one of the aliases must
+code for a particular language using the `/execute` endpoint, either the name or one of the aliases must
 be provided, along with the version.
 Multiple versions of the same language may be present at the same time, and may be selected when running a job.
 
@@ -30,7 +30,7 @@ Multiple versions of the same language may be present at the same time, and may 
 
 ### Execute Endpoint
 
-`POST /engine/execute`
+`POST /execute`
 
 This endpoint requests execution of some arbitrary code.
 
@@ -116,7 +116,7 @@ The following runtimes are currently supported:
 
 ## Deployment
 
-This Engine is designed to be deployed as a Docker container. It is recommended to use the provided `docker-compose.yaml` file to deploy the engine.
+This Engine is designed to be deployed as a Docker container. It is recommended to use the provided `compose.yml` file to deploy the engine.
 
 For instructions on how to install and run the Engine on AWS EC2, please visit the [Wiki - How to install and run the Engine on AWS EC2](https://github.com/Code-Elevate/Engine/wiki/How-to-install-and-run-the-Engine-on-AWS-EC2).
 
@@ -141,7 +141,7 @@ cd Engine
 ### Start the engine
 
 ```sh
-docker-compose up -d engine
+docker compose up -d
 ```
 
 The API will now be online on port `2000` with no language runtimes installed. To install runtimes, [use the CLI](#cli).
