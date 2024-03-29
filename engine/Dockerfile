@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:21-bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
