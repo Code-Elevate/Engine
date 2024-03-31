@@ -153,7 +153,8 @@ class Job {
     timeout,
     memory_limit,
     event_bus = null,
-    stdin = ""
+    stdin = "",
+    should_cleanup = true
   ) {
     return new Promise((resolve, reject) => {
       const nonetwork = config.disable_networking ? ["nosocket"] : [];
@@ -264,20 +265,33 @@ class Job {
         }
       });
 
-      proc.on("exit", () => this.exit_cleanup());
+      if (should_cleanup) {
+        proc.on("exit", () => this.exit_cleanup());
+        proc.on("close", (code, signal) => {
+          this.close_cleanup();
 
-      proc.on("close", (code, signal) => {
-        this.close_cleanup();
+          resolve({ stdout, stderr, code, signal, output });
+        });
 
-        resolve({ stdout, stderr, code, signal, output });
-      });
+        proc.on("error", (err) => {
+          this.exit_cleanup();
+          this.close_cleanup();
 
-      proc.on("error", (err) => {
-        this.exit_cleanup();
-        this.close_cleanup();
+          reject({ error: err, stdout, stderr, output });
+        });
+      } else {
+        proc.on("exit", () => {
+          resolve({ stdout, stderr, code, signal, output });
+        });
 
-        reject({ error: err, stdout, stderr, output });
-      });
+        proc.on("close", (code, signal) => {
+          resolve({ stdout, stderr, code, signal, output });
+        });
+
+        proc.on("error", (err) => {
+          reject({ error: err, stdout, stderr, output });
+        });
+      }
     });
   }
 
@@ -325,7 +339,8 @@ class Job {
         this.timeouts.compile,
         this.memory_limits.compile,
         event_bus,
-        ""
+        "",
+        true
       );
       emit_event_bus_result("compile", compile, event_bus);
       compile_errored = compile.code !== 0;
@@ -335,13 +350,6 @@ class Job {
     if (!compile_errored) {
       this.logger.debug("Running");
       emit_event_bus_stage("run", event_bus);
-      // run = await this.safe_call(
-      //   path.join(this.runtime.pkgdir, "run"),
-      //   [code_files[0].name, ...this.args],
-      //   this.timeouts.run,
-      //   this.memory_limits.run,
-      //   event_bus
-      // );
 
       if (typeof this.stdin === "string") {
         run = await this.safe_call(
@@ -350,7 +358,8 @@ class Job {
           this.timeouts.run,
           this.memory_limits.run,
           event_bus,
-          this.stdin
+          this.stdin,
+          true
         );
       } else if (Array.isArray(this.stdin)) {
         run = await Promise.all(
@@ -361,10 +370,14 @@ class Job {
               this.timeouts.run,
               this.memory_limits.run,
               event_bus,
-              stdin
+              stdin,
+              false
             );
           })
         );
+
+        this.exit_cleanup();
+        this.close_cleanup();
       }
       emit_event_bus_result("run", run, event_bus);
     }
