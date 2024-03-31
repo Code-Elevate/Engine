@@ -41,9 +41,20 @@ class Job {
 
     this.args = args;
     this.stdin = stdin;
-    // Add a trailing newline if it doesn't exist
-    if (this.stdin.slice(-1) !== "\n") {
+
+    // If stdin is of type string, add a trailing newline
+    if (typeof this.stdin === "string" && this.stdin.slice(-1) !== "\n") {
       this.stdin += "\n";
+    }
+
+    // If stdin is of type array, add a trailing newline to each element
+    else if (Array.isArray(this.stdin)) {
+      this.stdin = this.stdin.map((line) => {
+        if (line.slice(-1) !== "\n") {
+          return line + "\n";
+        }
+        return line;
+      });
     }
 
     this.#active_timeouts = [];
@@ -136,7 +147,14 @@ class Job {
     this.logger.debug("Destroyed processes writables");
   }
 
-  async safe_call(file, args, timeout, memory_limit, event_bus = null) {
+  async safe_call(
+    file,
+    args,
+    timeout,
+    memory_limit,
+    event_bus = null,
+    stdin = ""
+  ) {
     return new Promise((resolve, reject) => {
       const nonetwork = config.disable_networking ? ["nosocket"] : [];
 
@@ -182,7 +200,7 @@ class Job {
       this.#active_parent_processes.push(proc);
 
       if (event_bus === null) {
-        proc.stdin.write(this.stdin);
+        proc.stdin.write(stdin);
         proc.stdin.end();
         proc.stdin.destroy();
       } else {
@@ -306,7 +324,8 @@ class Job {
         code_files.map((x) => x.name),
         this.timeouts.compile,
         this.memory_limits.compile,
-        event_bus
+        event_bus,
+        ""
       );
       emit_event_bus_result("compile", compile, event_bus);
       compile_errored = compile.code !== 0;
@@ -316,13 +335,37 @@ class Job {
     if (!compile_errored) {
       this.logger.debug("Running");
       emit_event_bus_stage("run", event_bus);
-      run = await this.safe_call(
-        path.join(this.runtime.pkgdir, "run"),
-        [code_files[0].name, ...this.args],
-        this.timeouts.run,
-        this.memory_limits.run,
-        event_bus
-      );
+      // run = await this.safe_call(
+      //   path.join(this.runtime.pkgdir, "run"),
+      //   [code_files[0].name, ...this.args],
+      //   this.timeouts.run,
+      //   this.memory_limits.run,
+      //   event_bus
+      // );
+
+      if (typeof this.stdin === "string") {
+        run = await this.safe_call(
+          path.join(this.runtime.pkgdir, "run"),
+          [code_files[0].name, ...this.args],
+          this.timeouts.run,
+          this.memory_limits.run,
+          event_bus,
+          this.stdin
+        );
+      } else if (Array.isArray(this.stdin)) {
+        run = await Promise.all(
+          this.stdin.map(async (stdin, i) => {
+            return await this.safe_call(
+              path.join(this.runtime.pkgdir, "run"),
+              [code_files[0].name, ...this.args],
+              this.timeouts.run,
+              this.memory_limits.run,
+              event_bus,
+              stdin
+            );
+          })
+        );
+      }
       emit_event_bus_result("run", run, event_bus);
     }
 

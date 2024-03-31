@@ -40,10 +40,10 @@ This endpoint requests execution of some arbitrary code.
 - `files[].name` (_optional_) The name of the file to upload, must be a string containing no path or left out.
 - `files[].content` (**required**) The content of the files to upload, must be a string containing text to write.
 - `files[].encoding` (_optional_) The encoding scheme used for the file content. One of `base64`, `hex` or `utf8`. Defaults to `utf8`.
-- `stdin` (_optional_) The text to pass as stdin to the program. Must be a string or left out. Defaults to blank string.
+- `stdin` (_optional_) The text to pass as stdin to the program. Must be a string, a string array or left out. Defaults to blank string.
 - `args` (_optional_) The arguments to pass to the program. Must be an array or left out. Defaults to `[]`.
 - `compile_timeout` (_optional_) The maximum time allowed for the compile stage to finish before bailing out in milliseconds. Must be a number or left out. Defaults to `10000` (10 seconds).
-- `run_timeout` (_optional_) The maximum time allowed for the run stage to finish before bailing out in milliseconds. Must be a number or left out. Defaults to `3000` (3 seconds).
+- `run_timeout` (_optional_) The maximum time allowed for the run stage to finish before bailing out in milliseconds. Must be a number or left out. Defaults to `10000` (10 seconds).
 - `compile_memory_limit` (_optional_) The maximum amount of memory the compile stage is allowed to use in bytes. Must be a number or left out. Defaults to `-1` (no limit)
 - `run_memory_limit` (_optional_) The maximum amount of memory the run stage is allowed to use in bytes. Must be a number or left out. Defaults to `-1` (no limit)
 
@@ -83,6 +83,46 @@ It also contains the `code` and `signal` which was returned from each process.
     "code": 0,
     "signal": null
   }
+}
+```
+
+If the `stdin` is provided as an array, `run` will contain an array of outputs, one for each input.
+
+Sample request and response:
+
+```json
+{
+  "language": "python",
+  "version": "3.12.0",
+  "files": [
+    {
+      "content": "print(input())"
+    }
+  ],
+  "stdin": ["Hello, World!", "Goodbye, World!"]
+}
+```
+
+```json
+{
+  "language": "python",
+  "version": "3.12.0",
+  "run": [
+    {
+      "stdout": "Hello, World!\n",
+      "stderr": "",
+      "output": "Hello, World!\n",
+      "code": 0,
+      "signal": null
+    },
+    {
+      "stdout": "Goodbye, World!\n",
+      "stderr": "",
+      "output": "Goodbye, World!\n",
+      "code": 0,
+      "signal": null
+    }
+  ]
 }
 ```
 
