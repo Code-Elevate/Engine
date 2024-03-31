@@ -280,10 +280,6 @@ class Job {
           reject({ error: err, stdout, stderr, output });
         });
       } else {
-        proc.on("exit", () => {
-          resolve({ stdout, stderr, code, signal, output });
-        });
-
         proc.on("close", (code, signal) => {
           resolve({ stdout, stderr, code, signal, output });
         });
